@@ -1,8 +1,11 @@
 package com.example.bookreviewsystem.controller;
 
+import com.example.bookreviewsystem.dto.ReviewRequestDTO;
 import com.example.bookreviewsystem.entity.Review;
+import com.example.bookreviewsystem.repository.ReviewRepository;
 import com.example.bookreviewsystem.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +16,7 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final ReviewRepository reviewRepository;
 
     // Add review to a book
     @PostMapping("/book/{bookId}")
@@ -30,19 +34,19 @@ public class ReviewController {
     }
 
     // Get review by ID
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public Review getReviewById(@PathVariable Long id) {
         return reviewService.getReviewById(id);
     }
 
     // Update review safely
-    @PutMapping("/{id}")
+    @PutMapping("/id/{id}")
     public Review updateReview(@PathVariable Long id, @RequestBody Review reviewDetails) {
         return reviewService.updateReview(id, reviewDetails);
     }
 
     // Delete review safely
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/id/{id}")
     public String deleteReview(@PathVariable Long id) {
         reviewService.deleteReview(id);
         return "Review deleted successfully";
@@ -53,4 +57,12 @@ public class ReviewController {
     public List<Review> getReviewsByBook(@PathVariable Long bookId) {
         return reviewService.getReviewsByBookId(bookId);
     }
+
+    @PostMapping("/bulk-create")
+    public ResponseEntity<?> createBulkReviews(@RequestBody List<ReviewRequestDTO> reviewRequests) {
+        reviewService.saveAllReviews(reviewRequests);
+        return ResponseEntity.ok("All reviews saved successfully!");
+    }
+
+
 }

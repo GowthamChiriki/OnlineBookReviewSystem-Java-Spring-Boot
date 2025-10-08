@@ -1,6 +1,7 @@
 package com.example.bookreviewsystem.controller;
 
 import com.example.bookreviewsystem.entity.Book;
+import com.example.bookreviewsystem.repository.BookRepository;
 import com.example.bookreviewsystem.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +14,10 @@ import java.util.List;
 public class BookController {
 
     private final BookService bookService;
+    private final BookRepository bookRepository;
 
     // Create a book
-    @PostMapping
+    @PostMapping("/book")
     public Book createBook(@RequestBody Book book) {
         return bookService.createBook(book);
     }
@@ -48,4 +50,10 @@ public class BookController {
         bookService.deleteBook(id);
         return "Book deleted successfully";
     }
+
+    @PostMapping("/bulk")
+    public List<Book> createBooks(@RequestBody List<Book> books) {
+        return bookRepository.saveAll(books);
+    }
+
 }

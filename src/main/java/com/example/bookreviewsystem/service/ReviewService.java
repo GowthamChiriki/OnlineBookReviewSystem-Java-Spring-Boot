@@ -1,5 +1,6 @@
 package com.example.bookreviewsystem.service;
 
+import com.example.bookreviewsystem.dto.ReviewRequestDTO;
 import com.example.bookreviewsystem.entity.Book;
 import com.example.bookreviewsystem.entity.Review;
 import com.example.bookreviewsystem.exception.ResourceNotFoundException;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -66,5 +68,24 @@ public class ReviewService {
     public List<Review> getReviewsByBookId(Long bookId) {
 
         return reviewRepository.findByBookId(bookId);
+    }
+
+    public void saveAllReviews(List<ReviewRequestDTO> reviewRequests) {
+        List<Review> reviewsToSave = new ArrayList<>();
+
+        for (ReviewRequestDTO req : reviewRequests) {
+            Book book = bookRepository.findById(req.getBookId())
+                    .orElseThrow(() -> new RuntimeException("Book not found with ID " + req.getBookId()));
+
+            Review review = new Review();
+            review.setReviewerName(req.getReviewerName());
+            review.setRating(req.getRating());
+            review.setComment(req.getComment());
+            review.setBook(book);
+
+            reviewsToSave.add(review);
+        }
+
+        reviewRepository.saveAll(reviewsToSave);
     }
 }
