@@ -55,6 +55,7 @@ public class ReviewService {
     }
 
     // Delete review safely
+
     @Transactional
     public void deleteReview(Long id) {
         Review existingReview = getReviewById(id);
@@ -63,6 +64,7 @@ public class ReviewService {
 
     // Get all reviews for a specific book
     public List<Review> getReviewsByBookId(Long bookId) {
+
         return reviewRepository.findByBookId(bookId);
     }
 }

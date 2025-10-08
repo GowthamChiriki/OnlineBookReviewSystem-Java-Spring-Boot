@@ -1,5 +1,6 @@
 package com.example.bookreviewsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -28,7 +29,9 @@ public class Review {
     private String comment;
 
     @ManyToOne
-    @JoinColumn(name = "book_id", nullable = false)
+    @JoinColumn(name = "book_id")
+    @JsonBackReference
     private Book book;
+
 
 }
